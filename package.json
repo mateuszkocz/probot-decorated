@@ -6,7 +6,20 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["probot"],
+  "keywords": [
+    "probot"
+  ],
   "author": "@mateuszkocz",
-  "license": ""
+  "license": "",
+  "devDependencies": {
+    "typescript": "^4.0.3"
+  },
+  "dependencies": {
+    "probot": "^10.7.1",
+    "probot-commands": "^1.1.0",
+    "reflect-metadata": "^0.1.13"
+  },
+  "engines": {
+    "node": ">= 10.13.0"
+  }
 }
