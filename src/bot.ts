@@ -1,3 +1,4 @@
+import "reflect-metadata"
 import {
   COMMANDS_TO_SET_UP,
   CONTROLLERS_TO_SET_UP_METADATA_KEY,
