@@ -1,30 +1,34 @@
 import { ARGUMENTS_METADATA_KEY } from "./constants"
+import { InjectableArgumentProperties } from "./injectable-argument-properties.interface"
 
 type ParamDecoratorCreator = () => ParameterDecorator
-const createParamInjectionDecorator = (name: string): ParamDecoratorCreator => {
-  return () => (
-    target: Object,
-    propertyKey: string | symbol,
-    parameterIndex: number
-  ) => {
-    const params = [
+const createArgumentInjectionDecorator = (
+  name: string
+): ParamDecoratorCreator => {
+  return () => (target, propertyKey, parameterIndex) => {
+    const injectableArgumentProperties: InjectableArgumentProperties[] = [
       ...(Reflect.getMetadata(ARGUMENTS_METADATA_KEY, target, propertyKey) ??
         []),
       { name, index: parameterIndex },
     ]
-    Reflect.defineMetadata(ARGUMENTS_METADATA_KEY, params, target, propertyKey)
+    Reflect.defineMetadata(
+      ARGUMENTS_METADATA_KEY,
+      injectableArgumentProperties,
+      target,
+      propertyKey
+    )
   }
 }
-export const Context = createParamInjectionDecorator("context")
-export const Log = createParamInjectionDecorator("log")
-export const GitHub = createParamInjectionDecorator("github")
-export const Id = createParamInjectionDecorator("id")
-export const Name = createParamInjectionDecorator("name")
-export const Payload = createParamInjectionDecorator("payload")
-export const Event = createParamInjectionDecorator("event")
-export const IsBot = createParamInjectionDecorator("isBot")
-export const Config = createParamInjectionDecorator("config")
-export const Issue = createParamInjectionDecorator("issue")
-export const PullRequest = createParamInjectionDecorator("pullRequest")
-export const Repo = createParamInjectionDecorator("repo")
-export const CommandValue = createParamInjectionDecorator("command")
+export const Context = createArgumentInjectionDecorator("context")
+export const Log = createArgumentInjectionDecorator("log")
+export const GitHub = createArgumentInjectionDecorator("github")
+export const Id = createArgumentInjectionDecorator("id")
+export const Name = createArgumentInjectionDecorator("name")
+export const Payload = createArgumentInjectionDecorator("payload")
+export const Event = createArgumentInjectionDecorator("event")
+export const IsBot = createArgumentInjectionDecorator("isBot")
+export const Config = createArgumentInjectionDecorator("config")
+export const Issue = createArgumentInjectionDecorator("issue")
+export const PullRequest = createArgumentInjectionDecorator("pullRequest")
+export const Repo = createArgumentInjectionDecorator("repo")
+export const CommandValue = createArgumentInjectionDecorator("command")

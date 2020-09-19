@@ -1,18 +1,24 @@
 import { ARGUMENTS_METADATA_KEY } from "./constants"
+import { InjectableArgumentProperties } from "./injectable-argument-properties.interface"
 
-const createParamInjectionDecorator = (name: "request" | "response"): any => {
-  return () => (
-    target: Object,
-    propertyKey: string | symbol,
-    parameterIndex: number
-  ) => {
-    const params = [
+type ParamDecoratorCreator = () => ParameterDecorator
+const createArgumentInjectionDecorator = (
+  name: string
+): ParamDecoratorCreator => {
+  return () => (target, propertyKey, parameterIndex) => {
+    const injectableArgumentProperties: InjectableArgumentProperties[] = [
       ...(Reflect.getMetadata(ARGUMENTS_METADATA_KEY, target, propertyKey) ??
         []),
       { name, index: parameterIndex },
     ]
-    Reflect.defineMetadata(ARGUMENTS_METADATA_KEY, params, target, propertyKey)
+    Reflect.defineMetadata(
+      ARGUMENTS_METADATA_KEY,
+      injectableArgumentProperties,
+      target,
+      propertyKey
+    )
   }
 }
-export const Req = createParamInjectionDecorator("request")
-export const Res = createParamInjectionDecorator("response")
+
+export const Request = createArgumentInjectionDecorator("request")
+export const Response = createArgumentInjectionDecorator("response")

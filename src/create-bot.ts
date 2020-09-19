@@ -10,18 +10,21 @@ import {
   ROUTER_CONFIG,
   ROUTES_TO_SET_UP,
 } from "./constants"
+import { InjectableArgumentProperties } from "./injectable-argument-properties.interface"
+import { OnProperties } from "./on-properties.interface"
 
 const setUpControllers = (
   app: Application,
-  controllers: Array<{ new (): unknown }>
+  controllers: Array<{
+    new (): { [index: string]: (...args: unknown[]) => unknown }
+  }>
 ) => {
   controllers.forEach((controller) => {
     const instance = new controller()
-    const registrableProperties = Reflect.getMetadata(
+    const registrableProperties: OnProperties[] = Reflect.getMetadata(
       REGISTRABLE_PROPERTIES_METADATA_KEY,
       controller.prototype
     )
-
     registrableProperties.forEach(({ event, property }) => {
       app.on(event, (context) => {
         const values = {
@@ -35,16 +38,15 @@ const setUpControllers = (
           pullRequest: context.pullRequest.bind(context),
           repo: context.repo.bind(context),
         }
-
-        const properties = Reflect.getMetadata(
+        const injectableArgumentProperties: InjectableArgumentProperties[] = Reflect.getMetadata(
           ARGUMENTS_METADATA_KEY,
           controller.prototype,
           property
         )
+        const providedArguments = injectableArgumentProperties
           .sort((a, b) => a.index - b.index)
           .map(({ name }) => values[name])
-
-        instance[property].apply(instance, properties)
+        instance[property](...providedArguments)
       })
     })
   })
@@ -66,15 +68,17 @@ const setUpRoutes = (app: Application, routes: Array<{ new (): unknown }>) => {
           response,
         }
 
-        const properties = Reflect.getMetadata(
+        const injectableRouterArgumentProperties: InjectableArgumentProperties[] = Reflect.getMetadata(
           ARGUMENTS_METADATA_KEY,
           route.prototype,
           property
         )
+
+        const providedArguments = injectableRouterArgumentProperties
           .sort((a, b) => a.index - b.index)
           .map(({ name }) => values[name])
 
-        instance[property].apply(instance, properties)
+        instance[property](providedArguments)
       })
     })
   })
@@ -88,11 +92,6 @@ const setUpCommands = (
     const instance = new commandObject()
     const registrableCommands = Reflect.getMetadata(
       REGISTRABLE_COMMANDS_METADATA_KEY,
-      commandObject.prototype
-    )
-    console.log(
-      registrableCommands,
-      Reflect.getMetadataKeys(commandObject.prototype),
       commandObject.prototype
     )
     registrableCommands.forEach(({ command: commandName, property }) => {
@@ -110,20 +109,15 @@ const setUpCommands = (
           pullRequest: context.pullRequest.bind(context),
           repo: context.repo.bind(context),
         }
-
-        let properties = Reflect.getMetadata(
+        const injectableArgumentProperties: InjectableArgumentProperties[] = Reflect.getMetadata(
           ARGUMENTS_METADATA_KEY,
           commandObject.prototype,
           property
         )
-
-        console.log("props", properties)
-
-        properties = properties
+        const providedArguments = injectableArgumentProperties
           .sort((a, b) => a.index - b.index)
           .map(({ name }) => values[name])
-
-        instance[property].apply(instance, properties)
+        instance[property](providedArguments)
       })
     })
   })

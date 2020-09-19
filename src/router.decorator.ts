@@ -4,8 +4,8 @@ interface RouterConfig {
   prefix: string
 }
 
-export function Router(config: RouterConfig): ClassDecorator {
-  return (target: unknown) => {
+export const Router = (config: Readonly<RouterConfig>): ClassDecorator => {
+  return (target): void => {
     Reflect.defineMetadata(ROUTER_CONFIG, config, target)
   }
 }

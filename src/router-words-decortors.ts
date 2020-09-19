@@ -1,16 +1,18 @@
 import { REGISTRABLE_ROUTES_METADATA_KEY } from "./constants"
+import { HttpWord } from "./http-word.type"
+import { InjectableRouterArgumentProperties } from "./injectable-router-argument-properties.interface"
 
 const createRouteDecorator = (
-  word: "get" | "post" | "put" | "patch" | "delete"
+  word: HttpWord
 ): ((path: string) => MethodDecorator) => {
-  return (path: string) => (target, property, propertyDescriptior) => {
-    const registrables = [
+  return (path: string) => (target, property) => {
+    const injectableRouterArgumentProperties: InjectableRouterArgumentProperties[] = [
       ...(Reflect.getMetadata(REGISTRABLE_ROUTES_METADATA_KEY, target) ?? []),
       { word, path, property },
     ]
     Reflect.defineMetadata(
       REGISTRABLE_ROUTES_METADATA_KEY,
-      registrables,
+      injectableRouterArgumentProperties,
       target
     )
   }
