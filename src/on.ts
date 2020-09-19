@@ -7,11 +7,9 @@ export function On(event: string): MethodDecorator {
     descriptor: TypedPropertyDescriptor<T>
   ) => {
     const registerables = [
-      ...(Reflect.getMetadata(
-        REGISTRABLE_PROPERTIES_METADATA_KEY,
-        target
-      ) ?? []),
-      {event, property},
+      ...(Reflect.getMetadata(REGISTRABLE_PROPERTIES_METADATA_KEY, target) ??
+        []),
+      { event, property },
     ]
     Reflect.defineMetadata(
       REGISTRABLE_PROPERTIES_METADATA_KEY,

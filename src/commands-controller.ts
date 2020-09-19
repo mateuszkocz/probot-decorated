@@ -1,4 +1,3 @@
 export function CommandsController(): ClassDecorator {
-  return target => {
-  }
+  return (target) => {}
 }

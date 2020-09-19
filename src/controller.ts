@@ -1,4 +1,3 @@
 export function Controller(): ClassDecorator {
-  return <TFunction extends Function>(target: TFunction) => {
-  }
+  return <TFunction extends Function>(target: TFunction) => {}
 }

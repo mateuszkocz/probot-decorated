@@ -1,6 +1,6 @@
 import { ARGUMENTS_METADATA_KEY } from "./constants"
 
-type ParamDecoratorCreator = () => ParameterDecorator;
+type ParamDecoratorCreator = () => ParameterDecorator
 const createParamInjectionDecorator = (name: string): ParamDecoratorCreator => {
   return () => (
     target: Object,
@@ -10,7 +10,7 @@ const createParamInjectionDecorator = (name: string): ParamDecoratorCreator => {
     const params = [
       ...(Reflect.getMetadata(ARGUMENTS_METADATA_KEY, target, propertyKey) ??
         []),
-      {name, index: parameterIndex},
+      { name, index: parameterIndex },
     ]
     Reflect.defineMetadata(ARGUMENTS_METADATA_KEY, params, target, propertyKey)
   }

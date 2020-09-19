@@ -9,7 +9,7 @@ const createParamInjectionDecorator = (name: "request" | "response"): any => {
     const params = [
       ...(Reflect.getMetadata(ARGUMENTS_METADATA_KEY, target, propertyKey) ??
         []),
-      {name, index: parameterIndex},
+      { name, index: parameterIndex },
     ]
     Reflect.defineMetadata(ARGUMENTS_METADATA_KEY, params, target, propertyKey)
   }

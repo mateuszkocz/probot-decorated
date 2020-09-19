@@ -1,9 +1,13 @@
-import { COMMANDS_TO_SET_UP, CONTROLLERS_TO_SET_UP_METADATA_KEY, ROUTES_TO_SET_UP } from "./constants"
+import {
+  COMMANDS_TO_SET_UP,
+  CONTROLLERS_TO_SET_UP_METADATA_KEY,
+  ROUTES_TO_SET_UP,
+} from "./constants"
 
 interface BotConfiguration {
-  controllers?: Array<{ new(): any }>;
-  routes: Array<{new(): any}>,
-  commands: Array<{new(): any}>
+  controllers?: Array<{ new (): any }>
+  routes: Array<{ new (): any }>
+  commands: Array<{ new (): any }>
 }
 
 export function Bot(configuration: BotConfiguration): ClassDecorator {
