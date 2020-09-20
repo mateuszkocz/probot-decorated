@@ -40,7 +40,7 @@ const setUpControllers = (
           ...context,
           log: context.log,
           event: context.event,
-          isBot: context.isBot,
+          isBot: () => context.isBot,
           config: context.config.bind(context),
           issue: context.issue.bind(context),
           pullRequest: context.pullRequest.bind(context),
@@ -110,7 +110,7 @@ const setUpCommands = (app: Application, commands: UserProvidedClass[]) => {
           // TODO: which of those values are really provided?
           log: context.log,
           event: context.event,
-          isBot: context.isBot,
+          isBot: () => context.isBot,
           config: context.config.bind(context),
           issue: context.issue.bind(context),
           pullRequest: context.pullRequest.bind(context),
