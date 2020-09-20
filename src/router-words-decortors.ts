@@ -1,6 +1,6 @@
 import { REGISTRABLE_ROUTES_METADATA_KEY } from "./constants"
 import { HttpWord } from "./http-word.type"
-import { RegistrableRouteProperties } from "./registrable-command-properties.interface"
+import { RegistrableRouteProperties } from "./registrable-route-properties.interface"
 
 const createRouteDecorator = (
   word: HttpWord
