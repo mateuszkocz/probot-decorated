@@ -4,8 +4,8 @@
   "description": "Bundle of decorators for Probot.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "prettier src --write",
+    "test": "jest",
+    "format": "prettier src tests --write",
     "lint": "eslint src"
   },
   "keywords": [
@@ -56,5 +56,22 @@
       "no-console": 1,
       "prettier/prettier": 2
     }
+  },
+  "jest": {
+    "roots": [
+      "<rootDir>/src/",
+      "<rootDir>/tests/"
+    ],
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.[tj]sx?$",
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "json",
+      "node"
+    ],
+    "testEnvironment": "node"
   }
 }
