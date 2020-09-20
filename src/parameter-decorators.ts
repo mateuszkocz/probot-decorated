@@ -1,10 +1,13 @@
 import { ARGUMENTS_METADATA_KEY } from "./constants"
-import { InjectableArgumentName } from "./injectable-keys.type"
+import {
+  InjectableContextKey,
+  InjectableCommandKey,
+} from "./injectable-keys.type"
 import { InjectableArgumentProperties } from "./injectable-argument-properties.interface"
 
 type ParamDecoratorCreator = () => ParameterDecorator
 const createArgumentInjectionDecorator = (
-  name: InjectableArgumentName
+  name: InjectableContextKey | InjectableCommandKey
 ): ParamDecoratorCreator => {
   return () => (target, propertyKey, parameterIndex) => {
     const injectableArgumentProperties: InjectableArgumentProperties[] = [
