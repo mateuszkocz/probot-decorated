@@ -1,7 +1,7 @@
 import { HttpWord } from "./http-word.type"
 
-export interface InjectableRouterArgumentProperties {
+export interface RegistrableRouteProperties {
   readonly word: HttpWord
   readonly path: string
-  readonly index: number
+  readonly property: string | symbol
 }

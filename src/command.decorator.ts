@@ -1,10 +1,11 @@
 import { REGISTRABLE_COMMANDS_METADATA_KEY } from "./constants"
+import { RegistrableCommandProperties } from "./registrable-command-properties.interface"
 
 export const Command = (command: string): MethodDecorator => (
   target,
   property
 ): void => {
-  const properties = [
+  const properties: RegistrableCommandProperties[] = [
     ...(Reflect.getMetadata(REGISTRABLE_COMMANDS_METADATA_KEY, target) ?? []),
     { command, property },
   ]

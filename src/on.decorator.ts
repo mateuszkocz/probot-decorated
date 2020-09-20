@@ -1,9 +1,11 @@
 import { REGISTRABLE_PROPERTIES_METADATA_KEY } from "./constants"
-import { OnProperties } from "./on-properties.interface"
+import { RegistrableOnProperties } from "./registrable-on-properties.interface"
 
-export const On = (event: OnProperties["event"]): MethodDecorator => {
+export const On = (
+  event: RegistrableOnProperties["event"]
+): MethodDecorator => {
   return (target, property): void => {
-    const properties: OnProperties[] = [
+    const properties: RegistrableOnProperties[] = [
       ...(Reflect.getMetadata(REGISTRABLE_PROPERTIES_METADATA_KEY, target) ??
         []),
       { event, property },
