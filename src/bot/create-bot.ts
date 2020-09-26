@@ -16,6 +16,7 @@ import { InjectableContextKey } from "../webhooks"
 import { RegistrableCommandProperties } from "../commands"
 import { RegistrableOnProperties } from "../webhooks"
 import { RegistrableRouteProperties } from "../router"
+import { BotModule } from "./bot-module.interface"
 
 type UserProvidedFeature = {
   new (): Record<string | symbol, (...args: unknown[]) => unknown>
@@ -132,9 +133,9 @@ const setUpCommands = (app: Application, commands: UserProvidedFeature[]) => {
   })
 }
 
-export const createBot = (botModule: {
-  new (): unknown
-}): ((app: Application) => void) => {
+export const createBot = (
+  botModule: BotModule
+): ((app: Application) => void) => {
   return (app: Application): void => {
     const webhooks = Reflect.getMetadata(WEBHOOKS_TO_SET_UP, botModule)
     const routes = Reflect.getMetadata(ROUTES_TO_SET_UP, botModule)
