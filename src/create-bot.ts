@@ -34,34 +34,35 @@ const setUpControllers = (
       controller.prototype
     )
     registrableProperties.forEach(({ event, property }) => {
-      // @ts-ignore
-      app.on(event, (context: Context) => {
-        const values = {
-          context,
-          ...context,
-          log: context.log,
-          event: context.event,
-          isBot: () => context.isBot,
-          config: () => context.config,
-          issue: (...args: any[]) => context.issue(...args),
-          pullRequest: (...args: any[]) => context.pullRequest(...args),
-          repo: (...args: any[]) => context.repo(...args),
+      app.on(
+        event,
+        (context: Context): Promise<void> => {
+          const values = {
+            context,
+            ...context,
+            log: context.log,
+            event: context.event,
+            isBot: () => context.isBot,
+            config: () => context.config,
+            issue: (...args: unknown[]) => context.issue(...args),
+            pullRequest: (...args: unknown[]) => context.pullRequest(...args),
+            repo: (...args: unknown[]) => context.repo(...args),
+          }
+          const injectableArgumentProperties: InjectableArgumentProperties<
+            InjectableContextKey
+          >[] = Reflect.getMetadata(
+            ARGUMENTS_METADATA_KEY,
+            controller.prototype,
+            property
+          )
+          const providedArguments = injectableArgumentProperties
+            .sort((a, b) => a.index - b.index)
+            .map(({ name }) => values[name])
+          return instance[(property as unknown) as string](
+            ...providedArguments
+          ) as Promise<void>
         }
-        const injectableArgumentProperties: InjectableArgumentProperties<
-          InjectableContextKey
-        >[] = Reflect.getMetadata(
-          ARGUMENTS_METADATA_KEY,
-          controller.prototype,
-          property
-        )
-        const providedArguments = injectableArgumentProperties
-          .sort((a, b) => a.index - b.index)
-          .map(({ name }) => {
-            // @ts-ignore
-            return values[name]
-          })
-        return instance[(property as unknown) as string](...providedArguments)
-      })
+      )
     })
   })
 }
@@ -136,9 +137,9 @@ const setUpCommands = (app: Application, commands: UserProvidedClass[]) => {
   })
 }
 
-export const createBot = (
-  botModule: UserProvidedClass
-): ((app: Application) => void) => {
+export const createBot = (botModule: {
+  new (): unknown
+}): ((app: Application) => void) => {
   return (app: Application): void => {
     const controllers = Reflect.getMetadata(CONTROLLERS_TO_SET_UP, botModule)
     const routes = Reflect.getMetadata(ROUTES_TO_SET_UP, botModule)

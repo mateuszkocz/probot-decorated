@@ -49,7 +49,6 @@ describe("Controllers", () => {
     })
     class TestApp {}
 
-    // @ts-ignore
     bot.load(createBot(TestApp))
   })
 
@@ -75,8 +74,7 @@ describe("Controllers", () => {
       .reply(200)
 
     // Receive a webhook event
-    // @ts-ignore
-    await bot.receive({ name: "issues.opened", payload })
+    await bot.receive({ name: "issues", payload, id: "1" })
 
     expect(mock.pendingMocks()).toStrictEqual([])
   })
