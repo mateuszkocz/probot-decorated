@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "format": "prettier src tests --write",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "type-check": "tsc --noEmit"
   },
   "keywords": [
     "probot"
