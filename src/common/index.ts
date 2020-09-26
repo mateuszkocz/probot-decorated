@@ -1,3 +1,5 @@
 export * from "./constants"
 export * from "./create-argument-injector-decorator"
 export * from "./injectable-argument-properties.interface"
+export * from "./setup-strategy.contract"
+export * from "./user-provided-feature.interface"
