@@ -1,7 +1,8 @@
 import { Application } from "probot"
-import { BotModule, RouterSetupStrategy } from ".."
+import { BotModule } from ".."
 import { CommandsSetupStrategy } from "../commands"
 import { WebhooksSetupStrategy } from "../webhooks"
+import { RouterSetupStrategy } from "../router"
 
 export const createBot = (
   botModule: BotModule
