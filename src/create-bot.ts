@@ -3,7 +3,7 @@ import registerCommand from "probot-commands"
 import {
   ARGUMENTS_METADATA_KEY,
   COMMANDS_TO_SET_UP,
-  CONTROLLERS_TO_SET_UP_METADATA_KEY,
+  CONTROLLERS_TO_SET_UP,
   REGISTRABLE_COMMANDS_METADATA_KEY,
   REGISTRABLE_PROPERTIES_METADATA_KEY,
   REGISTRABLE_ROUTES_METADATA_KEY,
@@ -27,7 +27,7 @@ const setUpControllers = (
   app: Application,
   controllers: UserProvidedClass[]
 ) => {
-  controllers.forEach((controller) => {
+  controllers?.forEach((controller) => {
     const instance = new controller()
     const registrableProperties: RegistrableOnProperties[] = Reflect.getMetadata(
       REGISTRABLE_PROPERTIES_METADATA_KEY,
@@ -67,7 +67,7 @@ const setUpControllers = (
 }
 
 const setUpRoutes = (app: Application, routes: UserProvidedClass[]) => {
-  routes.forEach((route) => {
+  routes?.forEach((route) => {
     const instance = new route()
     const routerConfig = Reflect.getMetadata(ROUTER_CONFIG, route)
     const registrableRoutes: RegistrableRouteProperties[] = Reflect.getMetadata(
@@ -98,7 +98,7 @@ const setUpRoutes = (app: Application, routes: UserProvidedClass[]) => {
 }
 
 const setUpCommands = (app: Application, commands: UserProvidedClass[]) => {
-  commands.forEach((commandObject) => {
+  commands?.forEach((commandObject) => {
     const instance = new commandObject()
     const registrableCommands: RegistrableCommandProperties[] = Reflect.getMetadata(
       REGISTRABLE_COMMANDS_METADATA_KEY,
@@ -140,10 +140,7 @@ export const createBot = (
   botModule: UserProvidedClass
 ): ((app: Application) => void) => {
   return (app: Application): void => {
-    const controllers = Reflect.getMetadata(
-      CONTROLLERS_TO_SET_UP_METADATA_KEY,
-      botModule
-    )
+    const controllers = Reflect.getMetadata(CONTROLLERS_TO_SET_UP, botModule)
     const routes = Reflect.getMetadata(ROUTES_TO_SET_UP, botModule)
     const commands = Reflect.getMetadata(COMMANDS_TO_SET_UP, botModule)
     setUpControllers(app, controllers)

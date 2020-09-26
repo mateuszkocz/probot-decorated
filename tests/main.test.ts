@@ -46,8 +46,6 @@ describe("Controllers", () => {
 
     @Bot({
       controllers: [TestController],
-      routes: [],
-      commands: [],
     })
     class TestApp {}
 
