@@ -2,7 +2,7 @@ import fs from "fs"
 import nock from "nock"
 import path from "path"
 import { Probot, ProbotOctokit, Context as ProbotContext } from "probot"
-import { Bot, Controller, createBot, On, Context } from "../src"
+import { Bot, Webhook, createBot, On, Context } from "../src"
 import payload from "./fixtures/issues.opened.json"
 
 const privateKey = fs.readFileSync(
@@ -11,7 +11,7 @@ const privateKey = fs.readFileSync(
 )
 const issueCreatedBody = { body: "Thanks for opening this issue!" }
 
-describe("Controllers", () => {
+describe("Webhooks", () => {
   let bot: Probot
 
   beforeEach(() => {
@@ -33,8 +33,8 @@ describe("Controllers", () => {
       }),
     })
 
-    @Controller()
-    class TestController {
+    @Webhook()
+    class TestWebhook {
       @On("issues.opened")
       async sayHi(@Context() context: ProbotContext) {
         const issueComment = context.issue({
@@ -45,7 +45,7 @@ describe("Controllers", () => {
     }
 
     @Bot({
-      controllers: [TestController],
+      webhooks: [TestWebhook],
     })
     class TestApp {}
 

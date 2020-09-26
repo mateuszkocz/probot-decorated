@@ -3,7 +3,7 @@ import registerCommand from "probot-commands"
 import {
   ARGUMENTS_METADATA_KEY,
   COMMANDS_TO_SET_UP,
-  CONTROLLERS_TO_SET_UP,
+  WEBHOOKS_TO_SET_UP,
   REGISTRABLE_COMMANDS_METADATA_KEY,
   REGISTRABLE_PROPERTIES_METADATA_KEY,
   REGISTRABLE_ROUTES_METADATA_KEY,
@@ -23,15 +23,12 @@ type UserProvidedClass = {
   new (): Record<string | symbol, (...args: unknown[]) => unknown>
 }
 
-const setUpControllers = (
-  app: Application,
-  controllers: UserProvidedClass[]
-) => {
-  controllers?.forEach((controller) => {
-    const instance = new controller()
+const setupWebhooks = (app: Application, webhooks: UserProvidedClass[]) => {
+  webhooks?.forEach((webhook) => {
+    const instance = new webhook()
     const registrableProperties: RegistrableOnProperties[] = Reflect.getMetadata(
       REGISTRABLE_PROPERTIES_METADATA_KEY,
-      controller.prototype
+      webhook.prototype
     )
     registrableProperties.forEach(({ event, property }) => {
       app.on(
@@ -52,7 +49,7 @@ const setUpControllers = (
             InjectableContextKey
           >[] = Reflect.getMetadata(
             ARGUMENTS_METADATA_KEY,
-            controller.prototype,
+            webhook.prototype,
             property
           )
           const providedArguments = injectableArgumentProperties
@@ -141,10 +138,10 @@ export const createBot = (botModule: {
   new (): unknown
 }): ((app: Application) => void) => {
   return (app: Application): void => {
-    const controllers = Reflect.getMetadata(CONTROLLERS_TO_SET_UP, botModule)
+    const webhooks = Reflect.getMetadata(WEBHOOKS_TO_SET_UP, botModule)
     const routes = Reflect.getMetadata(ROUTES_TO_SET_UP, botModule)
     const commands = Reflect.getMetadata(COMMANDS_TO_SET_UP, botModule)
-    setUpControllers(app, controllers)
+    setupWebhooks(app, webhooks)
     setUpRoutes(app, routes)
     setUpCommands(app, commands)
   }
