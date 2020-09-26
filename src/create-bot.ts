@@ -34,6 +34,7 @@ const setUpControllers = (
       controller.prototype
     )
     registrableProperties.forEach(({ event, property }) => {
+      // @ts-ignore
       app.on(event, (context: Context) => {
         const values = {
           context,
@@ -41,10 +42,10 @@ const setUpControllers = (
           log: context.log,
           event: context.event,
           isBot: () => context.isBot,
-          config: context.config.bind(context),
-          issue: context.issue.bind(context),
-          pullRequest: context.pullRequest.bind(context),
-          repo: context.repo.bind(context),
+          config: () => context.config,
+          issue: (...args: any[]) => context.issue(...args),
+          pullRequest: (...args: any[]) => context.pullRequest(...args),
+          repo: (...args: any[]) => context.repo(...args),
         }
         const injectableArgumentProperties: InjectableArgumentProperties<
           InjectableContextKey
@@ -55,8 +56,11 @@ const setUpControllers = (
         )
         const providedArguments = injectableArgumentProperties
           .sort((a, b) => a.index - b.index)
-          .map(({ name }) => values[name])
-        instance[(property as unknown) as string](...providedArguments)
+          .map(({ name }) => {
+            // @ts-ignore
+            return values[name]
+          })
+        return instance[(property as unknown) as string](...providedArguments)
       })
     })
   })
