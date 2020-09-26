@@ -1,4 +1,4 @@
-import { REGISTRABLE_PROPERTIES_METADATA_KEY } from "./constants"
+import { REGISTRABLE_PROPERTIES_METADATA_KEY } from "../common/constants"
 import { RegistrableOnProperties } from "./registrable-on-properties.interface"
 
 export const On = (

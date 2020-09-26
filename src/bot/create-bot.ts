@@ -9,15 +9,13 @@ import {
   REGISTRABLE_ROUTES_METADATA_KEY,
   ROUTER_CONFIG,
   ROUTES_TO_SET_UP,
-} from "./constants"
-import { InjectableArgumentProperties } from "./injectable-argument-properties.interface"
-import {
-  InjectableCommandKey,
-  InjectableContextKey,
-} from "./injectable-keys.type"
-import { RegistrableCommandProperties } from "./registrable-command-properties.interface"
-import { RegistrableOnProperties } from "./registrable-on-properties.interface"
-import { RegistrableRouteProperties } from "./registrable-route-properties.interface"
+} from "../common"
+import { InjectableArgumentProperties } from "../common"
+import { InjectableCommandKey } from "../commands"
+import { InjectableContextKey } from "../webhooks"
+import { RegistrableCommandProperties } from "../commands"
+import { RegistrableOnProperties } from "../webhooks"
+import { RegistrableRouteProperties } from "../router"
 
 type UserProvidedClass = {
   new (): Record<string | symbol, (...args: unknown[]) => unknown>

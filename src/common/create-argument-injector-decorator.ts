@@ -1,9 +1,11 @@
+import { InjectableCommandKey } from "../commands/injectable-command-key.type"
 import { ARGUMENTS_METADATA_KEY } from "./constants"
 import { InjectableArgumentProperties } from "./injectable-argument-properties.interface"
+import { InjectableContextKey } from "../webhooks/injectable-context-keys.type"
 
 type ParamDecoratorCreator = () => ParameterDecorator
-const createArgumentInjectionDecorator = (
-  name: string
+export const createArgumentInjectionDecorator = (
+  name: InjectableContextKey | InjectableCommandKey
 ): ParamDecoratorCreator => {
   return () => (target, propertyKey, parameterIndex) => {
     const injectableArgumentProperties: InjectableArgumentProperties[] = [
@@ -19,6 +21,3 @@ const createArgumentInjectionDecorator = (
     )
   }
 }
-
-export const Request = createArgumentInjectionDecorator("request")
-export const Response = createArgumentInjectionDecorator("response")

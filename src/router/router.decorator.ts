@@ -1,4 +1,4 @@
-import { ROUTER_CONFIG } from "./constants"
+import { ROUTER_CONFIG } from "../common/constants"
 
 interface RouterConfig {
   prefix: string
