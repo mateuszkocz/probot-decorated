@@ -1,4 +1,4 @@
-import { REGISTRABLE_ROUTES_METADATA_KEY } from "./constants"
+import { REGISTRABLE_ROUTES_METADATA_KEY } from "../common/constants"
 import { HttpWord } from "./http-word.type"
 import { RegistrableRouteProperties } from "./registrable-route-properties.interface"
 

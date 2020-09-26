@@ -3,7 +3,7 @@ import {
   COMMANDS_TO_SET_UP,
   WEBHOOKS_TO_SET_UP,
   ROUTES_TO_SET_UP,
-} from "./constants"
+} from "../common/constants"
 
 interface BotConfiguration {
   webhooks?: Array<{ new (): unknown }>

@@ -1,4 +1,4 @@
-import { REGISTRABLE_COMMANDS_METADATA_KEY } from "./constants"
+import { REGISTRABLE_COMMANDS_METADATA_KEY } from "../common/constants"
 import { RegistrableCommandProperties } from "./registrable-command-properties.interface"
 
 export const Command = (command: string): MethodDecorator => (
