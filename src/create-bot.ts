@@ -3,7 +3,7 @@ import registerCommand from "probot-commands"
 import {
   ARGUMENTS_METADATA_KEY,
   COMMANDS_TO_SET_UP,
-  CONTROLLERS_TO_SET_UP_METADATA_KEY,
+  CONTROLLERS_TO_SET_UP,
   REGISTRABLE_COMMANDS_METADATA_KEY,
   REGISTRABLE_PROPERTIES_METADATA_KEY,
   REGISTRABLE_ROUTES_METADATA_KEY,
@@ -27,43 +27,48 @@ const setUpControllers = (
   app: Application,
   controllers: UserProvidedClass[]
 ) => {
-  controllers.forEach((controller) => {
+  controllers?.forEach((controller) => {
     const instance = new controller()
     const registrableProperties: RegistrableOnProperties[] = Reflect.getMetadata(
       REGISTRABLE_PROPERTIES_METADATA_KEY,
       controller.prototype
     )
     registrableProperties.forEach(({ event, property }) => {
-      app.on(event, (context: Context) => {
-        const values = {
-          context,
-          ...context,
-          log: context.log,
-          event: context.event,
-          isBot: context.isBot,
-          config: context.config.bind(context),
-          issue: context.issue.bind(context),
-          pullRequest: context.pullRequest.bind(context),
-          repo: context.repo.bind(context),
+      app.on(
+        event,
+        (context: Context): Promise<void> => {
+          const values = {
+            context,
+            ...context,
+            log: context.log,
+            event: context.event,
+            isBot: () => context.isBot,
+            config: () => context.config,
+            issue: (...args: unknown[]) => context.issue(...args),
+            pullRequest: (...args: unknown[]) => context.pullRequest(...args),
+            repo: (...args: unknown[]) => context.repo(...args),
+          }
+          const injectableArgumentProperties: InjectableArgumentProperties<
+            InjectableContextKey
+          >[] = Reflect.getMetadata(
+            ARGUMENTS_METADATA_KEY,
+            controller.prototype,
+            property
+          )
+          const providedArguments = injectableArgumentProperties
+            .sort((a, b) => a.index - b.index)
+            .map(({ name }) => values[name])
+          return instance[(property as unknown) as string](
+            ...providedArguments
+          ) as Promise<void>
         }
-        const injectableArgumentProperties: InjectableArgumentProperties<
-          InjectableContextKey
-        >[] = Reflect.getMetadata(
-          ARGUMENTS_METADATA_KEY,
-          controller.prototype,
-          property
-        )
-        const providedArguments = injectableArgumentProperties
-          .sort((a, b) => a.index - b.index)
-          .map(({ name }) => values[name])
-        instance[(property as unknown) as string](...providedArguments)
-      })
+      )
     })
   })
 }
 
 const setUpRoutes = (app: Application, routes: UserProvidedClass[]) => {
-  routes.forEach((route) => {
+  routes?.forEach((route) => {
     const instance = new route()
     const routerConfig = Reflect.getMetadata(ROUTER_CONFIG, route)
     const registrableRoutes: RegistrableRouteProperties[] = Reflect.getMetadata(
@@ -94,7 +99,7 @@ const setUpRoutes = (app: Application, routes: UserProvidedClass[]) => {
 }
 
 const setUpCommands = (app: Application, commands: UserProvidedClass[]) => {
-  commands.forEach((commandObject) => {
+  commands?.forEach((commandObject) => {
     const instance = new commandObject()
     const registrableCommands: RegistrableCommandProperties[] = Reflect.getMetadata(
       REGISTRABLE_COMMANDS_METADATA_KEY,
@@ -110,7 +115,7 @@ const setUpCommands = (app: Application, commands: UserProvidedClass[]) => {
           // TODO: which of those values are really provided?
           log: context.log,
           event: context.event,
-          isBot: context.isBot,
+          isBot: () => context.isBot,
           config: context.config.bind(context),
           issue: context.issue.bind(context),
           pullRequest: context.pullRequest.bind(context),
@@ -132,14 +137,11 @@ const setUpCommands = (app: Application, commands: UserProvidedClass[]) => {
   })
 }
 
-export const createBot = (
-  botModule: UserProvidedClass
-): ((app: Application) => void) => {
+export const createBot = (botModule: {
+  new (): unknown
+}): ((app: Application) => void) => {
   return (app: Application): void => {
-    const controllers = Reflect.getMetadata(
-      CONTROLLERS_TO_SET_UP_METADATA_KEY,
-      botModule
-    )
+    const controllers = Reflect.getMetadata(CONTROLLERS_TO_SET_UP, botModule)
     const routes = Reflect.getMetadata(ROUTES_TO_SET_UP, botModule)
     const commands = Reflect.getMetadata(COMMANDS_TO_SET_UP, botModule)
     setUpControllers(app, controllers)

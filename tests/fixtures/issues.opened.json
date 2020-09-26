@@ -1,0 +1,18 @@
+{
+  "action": "opened",
+  "issue": {
+    "number": 1,
+    "user": {
+      "login": "probot-decorated"
+    }
+  },
+  "repository": {
+    "name": "test-repo",
+    "owner": {
+      "login": "probot-decorated"
+    }
+  },
+  "installation": {
+    "id": 2
+  }
+}
