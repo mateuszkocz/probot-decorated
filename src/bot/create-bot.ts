@@ -17,11 +17,11 @@ import { RegistrableCommandProperties } from "../commands"
 import { RegistrableOnProperties } from "../webhooks"
 import { RegistrableRouteProperties } from "../router"
 
-type UserProvidedClass = {
+type UserProvidedFeature = {
   new (): Record<string | symbol, (...args: unknown[]) => unknown>
 }
 
-const setupWebhooks = (app: Application, webhooks: UserProvidedClass[]) => {
+const setupWebhooks = (app: Application, webhooks: UserProvidedFeature[]) => {
   webhooks?.forEach((webhook) => {
     const instance = new webhook()
     const registrableProperties: RegistrableOnProperties[] = Reflect.getMetadata(
@@ -62,7 +62,7 @@ const setupWebhooks = (app: Application, webhooks: UserProvidedClass[]) => {
   })
 }
 
-const setUpRoutes = (app: Application, routes: UserProvidedClass[]) => {
+const setUpRoutes = (app: Application, routes: UserProvidedFeature[]) => {
   routes?.forEach((route) => {
     const instance = new route()
     const routerConfig = Reflect.getMetadata(ROUTER_CONFIG, route)
@@ -93,7 +93,7 @@ const setUpRoutes = (app: Application, routes: UserProvidedClass[]) => {
   })
 }
 
-const setUpCommands = (app: Application, commands: UserProvidedClass[]) => {
+const setUpCommands = (app: Application, commands: UserProvidedFeature[]) => {
   commands?.forEach((commandObject) => {
     const instance = new commandObject()
     const registrableCommands: RegistrableCommandProperties[] = Reflect.getMetadata(
