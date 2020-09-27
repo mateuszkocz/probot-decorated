@@ -1,4 +1,4 @@
-import { createArgumentInjectionDecorator } from "../common/create-argument-injector-decorator"
+import { createArgumentInjectionDecorator } from "../common"
 
 export const Context = createArgumentInjectionDecorator("context")
 export const Log = createArgumentInjectionDecorator("log")
