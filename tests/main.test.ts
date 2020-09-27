@@ -2,7 +2,7 @@ import nock from "nock"
 import { Context as ProbotContext, Probot } from "probot"
 import { Bot, Context, createBot, On, Webhook } from "../src"
 import payload from "./fixtures/issues.opened.json"
-import { createProbot } from "./utils/create-probot"
+import { createTestProbot } from "./utils/create-test-probot"
 
 const issueCreatedBody = { body: "Thanks for opening this issue!" }
 
@@ -19,7 +19,7 @@ describe("Webhooks", () => {
   })
 
   beforeEach(() => {
-    bot = createProbot()
+    bot = createTestProbot()
 
     @Webhook()
     class TestWebhook {

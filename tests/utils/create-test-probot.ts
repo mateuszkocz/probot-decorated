@@ -7,7 +7,7 @@ const privateKey = fs.readFileSync(
   "utf-8"
 )
 
-export const createProbot = () =>
+export const createTestProbot = () =>
   new Probot({
     id: 123,
     privateKey,
