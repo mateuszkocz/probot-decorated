@@ -1,14 +1,9 @@
-import fs from "fs"
 import nock from "nock"
-import path from "path"
-import { Probot, ProbotOctokit, Context as ProbotContext } from "probot"
-import { Bot, Webhook, createBot, On, Context } from "../src"
+import { Context as ProbotContext, Probot } from "probot"
+import { Bot, Context, createBot, On, Webhook } from "../src"
 import payload from "./fixtures/issues.opened.json"
+import { createProbot } from "./utils/create-probot"
 
-const privateKey = fs.readFileSync(
-  path.join(__dirname, "fixtures/mock-cert.pem"),
-  "utf-8"
-)
 const issueCreatedBody = { body: "Thanks for opening this issue!" }
 
 describe("Webhooks", () => {
@@ -24,14 +19,7 @@ describe("Webhooks", () => {
   })
 
   beforeEach(() => {
-    bot = new Probot({
-      id: 123,
-      privateKey,
-      Octokit: ProbotOctokit.defaults({
-        retry: { enabled: false },
-        throttle: { enabled: false },
-      }),
-    })
+    bot = createProbot()
 
     @Webhook()
     class TestWebhook {
