@@ -14,5 +14,10 @@
   },
   "installation": {
     "id": 2
+  },
+  "sender": {
+    "login": "Botek",
+    "id": 3,
+    "type": "User"
   }
 }

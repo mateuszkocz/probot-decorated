@@ -1,0 +1,28 @@
+{
+  "action": "opened",
+  "number": 1,
+  "pull_request": {
+    "url": "https://api.github.com/repos/probot-decorated/test-repo/pulls/1",
+    "id": 1,
+    "number": 1,
+    "user": {
+      "login": "probot-decorated",
+      "id": 10,
+      "type": "User"
+    }
+  },
+  "repository": {
+    "name": "test-repo",
+    "owner": {
+      "login": "probot-decorated"
+    }
+  },
+  "sender": {
+    "login": "probot-decorated",
+    "id": 10,
+    "type": "User"
+  },
+  "installation": {
+    "id": 2
+  }
+}

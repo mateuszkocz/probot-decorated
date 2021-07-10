@@ -37,7 +37,9 @@ export class WebhooksSetupStrategy implements SetupStrategyContract {
               ...context,
               log: context.log,
               event: context.event,
-              isBot: () => context.isBot,
+              get isBot() {
+                return context.isBot
+              },
               config: () => context.config,
               issue: (...args: unknown[]) => context.issue(...args),
               pullRequest: (...args: unknown[]) => context.pullRequest(...args),
